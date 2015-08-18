@@ -53,14 +53,19 @@ func (c *Client) Schedules() ([]*Schedule, error) {
 
 	schedules := doc.Find(".stage-schedule")
 	ss := make([]*Schedule, schedules.Size())
+	now := time.Now()
 	schedules.Each(func(i int, d *goquery.Selection) {
 		text := d.Text()
 		times := strings.Split(text, " ~ ")
 		start, _ := time.ParseInLocation(ScheduleFormat, times[0], timeLocation)
 		end, _ := time.ParseInLocation(ScheduleFormat, times[1], timeLocation)
+		endYear := now.Year()
+		if start.Month() > end.Month() {
+			endYear += 1
+		}
 		s := &Schedule{
-			Start: start,
-			End:   end,
+			Start: start.AddDate(now.Year(), 0, 0),
+			End:   end.AddDate(endYear, 0, 0),
 		}
 		ss[i] = s
 	})
