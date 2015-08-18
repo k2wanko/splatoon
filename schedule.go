@@ -1,6 +1,9 @@
 package splatoon
 
 import (
+	"crypto/sha1"
+	"encoding/json"
+	"fmt"
 	"path"
 	"strings"
 	"time"
@@ -33,6 +36,15 @@ const (
 var (
 	timeLocation *time.Location
 )
+
+func (s *Schedule) String() string {
+	if s == nil {
+		return ""
+	}
+
+	b, _ := json.Marshal(s)
+	return fmt.Sprintf("%d-%x", s.Start.Unix(), sha1.Sum(b))
+}
 
 func (c *Client) Schedules() ([]*Schedule, error) {
 	if timeLocation == nil {
