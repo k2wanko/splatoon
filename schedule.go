@@ -2,8 +2,10 @@ package splatoon
 
 import (
 	"crypto/sha1"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"path"
 	"strings"
 	"time"
@@ -44,6 +46,18 @@ func (s *Schedule) String() string {
 
 	b, _ := json.Marshal(s)
 	return fmt.Sprintf("%d-%x", s.Start.Unix(), sha1.Sum(b))
+}
+
+func (s *Stage) String() string {
+	if s == nil {
+		return ""
+	}
+
+	str := s.Type + "-" + base64.StdEncoding.EncodeToString([]byte(url.QueryEscape(s.Rule)))
+	for _, m := range s.Maps {
+		str = str + "-" + m.String()
+	}
+	return str
 }
 
 func (m *Map) String() string {
