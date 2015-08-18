@@ -46,6 +46,17 @@ func (s *Schedule) String() string {
 	return fmt.Sprintf("%d-%x", s.Start.Unix(), sha1.Sum(b))
 }
 
+func (m *Map) String() string {
+	if m == nil {
+		return ""
+	}
+
+	f := path.Base(m.ImgSrc)
+	e := path.Ext(f)
+
+	return f[0 : len(f)-len(e)]
+}
+
 func (c *Client) Schedules() ([]*Schedule, error) {
 	if timeLocation == nil {
 		loc, _ := time.LoadLocation("Asia/Tokyo")
